@@ -171,6 +171,95 @@ namespace net_il_mio_fotoalbum.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            using PhotoContext db = new();
+            PhotoFormModel model = new();
+            Photo photo = db.Photo.Include(p => p.Categories).FirstOrDefault(p => p.Id == id);
 
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
+            List<Category> categories = db.Categories.ToList();
+            List<SelectListItem> listCategories = new();
+
+            foreach (Category category in categories)
+            {
+                listCategories.Add(new SelectListItem()
+                { Text = category.Name, Value = category.Id.ToString() });
+            }
+
+            model.Photo = photo;
+            model.Category = listCategories;
+            model.SelectedCategories = photo.Categories.Select(c => c.Id.ToString()).ToList();
+
+            return View("Update", model);
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(int id, PhotoFormModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                using PhotoContext context = new();
+
+                List<Category> categories = context.Categories.ToList();
+                List<SelectListItem> listCategories = new();
+
+                foreach (Category category in categories)
+                {
+                    listCategories.Add(new SelectListItem()
+                    { Text = category.Name, Value = category.Id.ToString() });
+                }
+
+                data.Category = listCategories;
+
+                return View(data);
+            }
+
+            using PhotoContext db = new();
+            Photo photo = db.Photo.Include(p => p.Categories).FirstOrDefault(p => p.Id == id);
+
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
+            photo.Title = data.Photo.Title;
+            photo.Description = data.Photo.Description;
+            photo.Categories.Clear();
+
+            if (data.ImageFile != null && data.ImageFile.Length > 0)
+            {
+                string imageUrl = UploadToS3(data.ImageFile);
+                photo.Image = imageUrl;
+            }
+
+            if (data.SelectedCategories != null)
+            {
+                foreach (string selectedCategoryId in data.SelectedCategories)
+                {
+                    if (selectedCategoryId != null && int.TryParse(selectedCategoryId, out int categoryId))
+                    {
+                        Category category = db.Categories.FirstOrDefault(c => c.Id == categoryId);
+                        if (category != null)
+                        {
+                            photo.Categories.Add(category);
+                        }
+                    }
+                }
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }
