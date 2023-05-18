@@ -6,7 +6,10 @@
     <title>@ViewData["Title"] - Photo Album</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/toastify.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="~/favicon.ico">
+
 </head>
 
 @using Microsoft.AspNetCore.Identity
@@ -19,7 +22,7 @@
         <nav class="flex items-center max-w-screen-xl mx-auto px-6 py-3">
             <div class="flex items-center justify-start space-x-6">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img class="w-32 md:w-32 cursor-pointer" src="/img/Logo.png" alt="Logo">
+                    <img class="w-28 md:w-28 cursor-pointer" src="/img/Logo.png" alt="Logo">
                 </a>
             </div>
             <div class="flex flex-grow items-center justify-end space-x-6">
@@ -57,6 +60,8 @@
 
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/site.js"></script>
+    <script src="/js/toastify.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
