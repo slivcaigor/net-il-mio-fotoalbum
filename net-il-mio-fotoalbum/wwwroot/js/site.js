@@ -1,4 +1,5 @@
-﻿document.getElementById('contactForm').addEventListener('submit', function (event) {
+﻿// Form Contact
+document.getElementById('contactForm').addEventListener('submit', function (event) {
     // Prevent the default submit behavior
     event.preventDefault();
 
