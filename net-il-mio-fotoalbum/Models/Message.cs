@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace net_il_mio_fotoalbum.Models
 {
-    [Table("Message")]
+    [Table("messages")]
     public class Message
     {
         [Key]

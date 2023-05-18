@@ -2,20 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using net_il_mio_fotoalbum;
 
-
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("PhotoContextConnection") ?? throw new InvalidOperationException("Connection string 'PhotoContextConnection' not found.");
 
-builder.Services.AddDbContext<PhotoContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<PhotoContext>();
+builder.Services.AddDbContext<PhotoContext>();
 
 builder.Configuration.AddJsonFile("appsettings.json");
-
-builder.Services.AddDbContext<PhotoContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("FotoAlbumDB")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
