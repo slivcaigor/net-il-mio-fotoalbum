@@ -3,6 +3,9 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using net_il_mio_fotoalbum.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
 
 namespace net_il_mio_fotoalbum.Controllers
 {
@@ -79,6 +82,95 @@ namespace net_il_mio_fotoalbum.Controllers
             }
             return RedirectToAction("Error404");
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            using PhotoContext db = new();
+            PhotoFormModel model = new();
+            List<Category> categories = db.Categories.ToList();
+
+            List<SelectListItem> listCategories = new();
+
+            foreach (Category category in categories)
+            {
+                listCategories.Add(new SelectListItem()
+                { Text = category.Name, Value = category.Id.ToString() });
+            }
+
+
+            model.Photo = new Photo();
+            model.Category = listCategories;
+
+            return View("Create", model);
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(PhotoFormModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                using PhotoContext context = new();
+
+                List<Category> categories = context.Categories.ToList();
+                List<SelectListItem> listCategories = new();
+
+                foreach (Category category in categories)
+                {
+                    listCategories.Add(new SelectListItem()
+                    { Text = category.Name, Value = category.Id.ToString() });
+                }
+
+                data.Category = listCategories;
+
+                return View(data);
+            }
+
+            using PhotoContext db = new();
+            Photo pizza = new Photo
+            {
+                Title = data.Photo.Title,
+                Description = data.Photo.Description,
+                Categories = new List<Category>()
+            };
+
+            if (data.ImageFile != null && data.ImageFile.Length > 0)
+            {
+                string imageUrl = UploadToS3(data.ImageFile);
+                pizza.Image = imageUrl;
+            }
+            else
+            {
+                ModelState.AddModelError("ImageFile", "Seleziona un'immagine");
+                return View(data);
+            }
+
+            if (data.SelectedCategories != null)
+            {
+                foreach (string selectedCategoryId in data.SelectedCategories)
+                {
+                    if (selectedCategoryId != null && int.TryParse(selectedCategoryId, out int categoryId))
+                    {
+                        Category category = db.Categories.FirstOrDefault(ing => ing.Id == categoryId);
+                        if (category != null)
+                        {
+                            pizza.Categories.Add(category);
+                        }
+                    }
+                }
+            }
+
+            db.Photo.Add(pizza);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
 
     }
 }
