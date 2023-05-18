@@ -25,6 +25,13 @@
             } else {
                 photos.forEach(function (photo) {
                     var photoElement = document.createElement('div');
+                    photoElement.setAttribute('data-photo-id', photo.id);
+
+                    photoElement.addEventListener('click', function () {
+                        window.location.href = `/photo/details/${photo.id}`;
+                    });
+
+
                     photoElement.innerHTML = `
             <div class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
               <img class="w-full mx-auto transform transition duration-300 hover:scale-105" src="${photo.image}" alt="${photo.title}" loading="lazy">
@@ -33,7 +40,7 @@
                 <p class="text-gray-500 poppins text-sm text-center">${photo.description}</p>
               </div>
             </div>
-          `;
+          `; 
                     photoContainer.appendChild(photoElement);
                 });
             }

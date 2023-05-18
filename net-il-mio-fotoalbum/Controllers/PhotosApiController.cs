@@ -39,5 +39,30 @@ namespace net_il_mio_fotoalbum.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetPhoto(int id)
+        {
+            using (var context = new PhotoContext())
+            {
+                var photo = context.Photo
+                    .Include(p => p.Categories)
+                    .ThenInclude(c => c.Photos) 
+                    .FirstOrDefault(p => p.Id == id);
+
+                if (photo == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(photo);
+            }
+        }
+
+
+
+
+
+
+
     }
 }

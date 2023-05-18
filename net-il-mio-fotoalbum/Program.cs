@@ -46,12 +46,19 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+    endpoints.MapControllerRoute(
+        name: "PhotoDetails",
+        pattern: "photos/details/{id}",
+        defaults: new { controller = "Photos", action = "Details" }
+    );
 });
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.MapRazorPages();
+
 
 app.Run();

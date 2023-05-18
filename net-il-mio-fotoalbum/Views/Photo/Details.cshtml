@@ -1,53 +1,30 @@
-﻿@{
-    ViewData["Title"] = "";
-    @model Photo
-
-}
-
-<div class="min-w-screen min-h-screen bg-yellow-300 flex items-center p-5 lg:p-10 overflow-hidden relative">
-    <div class="w-full max-w-6xl rounded bg-white shadow-xl p-10 lg:p-20 mx-auto text-gray-800 relative md:text-left">
-        <div class="md:flex items-center -mx-10">
-            <div class="w-full md:w-1/2 px-10 mb-10 md:mb-0">
-                <div class="relative">
-                    <img src="@Model.Image" class="w-full relative z-10" alt="@Model.Title">
-                    <div class="border-4 border-yellow-200 absolute top-10 bottom-10 left-10 right-10 z-0"></div>
-                </div>
+﻿<div class="relative max-w-screen-xl mx-auto mt-10 pt-10 sm:pt-0 mb-10">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 items-center md:gap-20 ">
+        <div class="content">
+            <div class="flex items-center gap-3">
+                <hr class="w-10 bg-orange-500 border " />
+                <span class="md:text-[18px] font-medium text-gray-800 ">
+                    Photography
+                </span>
             </div>
-            <div class="w-full md:w-1/2 px-10">
-                @if (User.IsInRole("Admin"))
-                {
-                    <div class="flex gap-2 mb-12">
-                        <a href="@Url.Action("Update", "Photo", new { id = Model.Id })" class="btn btn-primary bg-black">Modifica</a>
-                        <form asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" method="post">
-                            <button class="btn btn-primary bg-black" type="submit">Elimina</button>
-                        </form>
-                    </div>
-                }
-                <div class="mb-10">
+            <p id="title" class="text-[40px] lg:text-[45px] xl:text-[55px] font-bold leading-tight mt-5 sm:mt-0 ">
+            </p>
+            <p id="description" class="mt-5 md:text-md ">
+            </p>
+            <div class="flex gap-4 mt-10">
 
-                    @if (Model.Categories != null && Model.Categories.Any())
-                    {
-                        <p class="mb-2">
-                            <strong>Categories:</strong>
-                            <ul>
-                                @foreach (var ingredient in Model.Categories)
-                                {
-                                    <li>@ingredient.Name</li>
-                                }
-                            </ul>
-                        </p>
-                    }
-                    <h1 class="font-bold uppercase text-2xl mt-5 mb-5">@Model.Title</h1>
-                    <p class="text-sm">@Model.Description</p>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <span class="text-2xl leading-none align-baseline">$</span>
-                        <button class="bg-yellow-300 opacity-75 hover:opacity-100 text-yellow-900 hover:text-gray-900 rounded-full px-10 py-2 font-semibold ml-2"><i class="mdi mdi-cart -ml-2 mr-2"></i> Order Now</button>
-                    </div>
-                </div>
+                <button class="font-medium text-[16px] flex items-center px-5 py-3 md:py-4 md:px-8 rounded-xl capitalize bg-gradient-to-r from-orange-300 to-orange-500 hover:from-pink-500 hover:to-yellow-500  relative gap-2 transition duration-300 hover:scale-105 text-white shadow-glass ">
+                    Get In Touch
+                    <span class="animate-ping absolute right-0 top-0 w-3 h-3  rounded-full bg-gradient-to-r from-orange -400 to-orange-700 "></span>
+                </button>
+                <RiFacebookFill class="" />
+                <SiBehance />
             </div>
+
+        </div>
+        <div class="relative sm:mt-0 mt-10 px-6 sm:px-0">
+
+            <img id="photo-image" class="max-w-full relative h-auto z-10" alt="">
         </div>
     </div>
 </div>
-
