@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "";
+    @model List<Photo>
+
+    <!-- Pagination controls -->
+    int currentPage = ViewBag.CurrentPage != null ? (int)ViewBag.CurrentPage : 1;
+    int totalPhotos = (int)ViewData["TotalPhotos"];
+    int pageSize = ViewBag.PageSize;
+    int totalPages = (int)Math.Ceiling((double)totalPhotos / pageSize);
+}
+
+
+@if (ViewBag.Message != null)
+{
+    <h1 class="text-center">@ViewBag.Message</h1>
+}
+else
+{
+    <section class="my-12 max-w-screen-xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-12">
+            @foreach (var card in Model)
+            {
+                <a href="@Url.Action("Details", "Photo", new{id=@card.Id})">
+                    <div class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
+                        <img class="w-full rounded-full mx-auto transform transition duration-300 hover:scale-105" src="@card.Image" alt="@card.Title" loading="lazy">
+                        <div class="flex flex-col items-center my-3 space-y-2">
+                            <h1 class="text-gray-900 poppins text-lg">@card.Title</h1>
+                            <p class="text-gray-500 poppins text-sm text-center">@card.Description</p>
+                            <span class="bg-primary text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Order Now</span>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+        <div class="flex gap-2 justify-center mt-10 text-lg">
+            @if (currentPage > 1)
+            {
+                <a href="/Photo/Index?pageNumber=@(currentPage - 1)">Previous</a>
+            }
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <a href="/Photo/Index?pageNumber=@i" @(i == currentPage ? "class=current" : "")>@i</a>
+            }
+
+            @if (currentPage < totalPages)
+            {
+                <a href="/Photo/Index?pageNumber=@(currentPage + 1)">Next</a>
+            }
+        </div>
+    </section>
+}
