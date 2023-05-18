@@ -1,0 +1,48 @@
+﻿@model PhotoFormModel
+
+@if (Model != null)
+{
+    <div class="min-h-screen flex items-center justify-center bg-gray-50">
+        <div class="max-w-2xl mx-auto px-4">
+            <h1 class="mb-5 font-bold text-3xl flex justify-center font-mono">Create new listing</h1>
+            <form asp-controller="Photo" asp-action="Update" method="post" enctype="multipart/form-data">
+                <div class="text-center text-red-500 mb-5 validation-summary-errors" asp-validation-summary="All"></div>
+                @Html.AntiForgeryToken()
+                <div class="mb-4">
+                    <label class="block">Nome:</label>
+                    <input asp-for="Photo.Title" class="w-full py-2 px-2" />
+                </div>
+                <div class="mb-4">
+                    <label class="block">Descrizione:</label>
+                    <textarea asp-for="Photo.Description" class="w-full py-2 px-2"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block">Immagine:</label>
+                    <input asp-for="ImageFile" type="file" class="w-full py-2 px-2" />
+                </div>
+
+
+                <div class="mb-4">
+                    <label class="block pb-2">Categories:</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @{
+                            var selectedCategories = Model.SelectedCategories ?? new List<string>();
+                        }
+                        @foreach (var category in Model.Category)
+                        {
+                            <div class="flex gap-1 items-center">
+                                <input type="checkbox" name="SelectedCategories" value="@category.Value" @(selectedCategories.Contains(category.Value) ? "checked" : "") />
+                                <label>@category.Text</label>
+                            </div>
+                        }
+                    </div>
+                    <span asp-validation-for="SelectedCategories" class="text-red-500"></span>
+                </div>
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary bg-black w-full" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+}
