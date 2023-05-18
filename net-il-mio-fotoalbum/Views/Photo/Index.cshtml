@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "";
+    ViewData["Title"] = "Cool Photos";
     @model List<Photo>
 
     <!-- Pagination controls -->
@@ -22,11 +22,10 @@ else
             {
                 <a href="@Url.Action("Details", "Photo", new{id=@card.Id})">
                     <div class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
-                        <img class="w-full rounded-full mx-auto transform transition duration-300 hover:scale-105" src="@card.Image" alt="@card.Title" loading="lazy">
+                        <img class="w-full mx-auto transform transition duration-300 hover:scale-105" src="@card.Image" alt="@card.Title" loading="lazy">
                         <div class="flex flex-col items-center my-3 space-y-2">
                             <h1 class="text-gray-900 poppins text-lg">@card.Title</h1>
                             <p class="text-gray-500 poppins text-sm text-center">@card.Description</p>
-                            <span class="bg-primary text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Order Now</span>
                         </div>
                     </div>
                 </a>
