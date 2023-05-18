@@ -61,6 +61,30 @@ namespace net_il_mio_fotoalbum.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Messages()
+        {
+            using PhotoContext db = new();
+            List<Message> messages = db.Messages.ToList();
+            return View(messages);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteMessage(int id)
+        {
+            using (PhotoContext db = new PhotoContext())
+            {
+                Message message = db.Messages.Find(id);
+                if (message != null)
+                {
+                    db.Messages.Remove(message);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Messages");
+            }
+        }
 
 
     }

@@ -51,7 +51,13 @@ app.UseEndpoints(endpoints =>
         pattern: "photos/details/{id}",
         defaults: new { controller = "Photos", action = "Details" }
     );
+    endpoints.MapControllerRoute(
+        name: "Messages",
+        pattern: "messages",
+        defaults: new { controller = "Admin", action = "Messages" }
+    );
 });
+
 
 app.MapControllerRoute(
     name: "default",
