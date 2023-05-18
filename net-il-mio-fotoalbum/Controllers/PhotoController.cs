@@ -261,5 +261,28 @@ namespace net_il_mio_fotoalbum.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            using PhotoContext db = new();
+            Photo? photo = db.Photo.Where(photo => photo.Id == id).FirstOrDefault();
+
+            if (photo != null)
+            {
+                db.Photo.Remove(photo);
+
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Error404");
+            }
+        }
     }
 }
