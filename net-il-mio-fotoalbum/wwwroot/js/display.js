@@ -1,17 +1,19 @@
 ﻿axios.get('/api/PhotosApi/GetPhotos')
     .then(function (response) {
-        var photos = response.data;
+        var data = response.data;
+        var photos = data.photos;
         var searchInput = document.getElementById('search-input');
         var photoContainer = document.getElementById('photo-container');
+        var currentPage = data.page;
+        var totalPages = data.totalPages;
+        var pageSize = data.pageSize; // Add this line
+        var previousButton = document.getElementById('previous-button');
+        var nextButton = document.getElementById('next-button');
 
         function displayPhotos(photos) {
             photoContainer.innerHTML = '';
 
             if (photos.length === 0) {
-                var noPhotosMessage = document.createElement('p');
-                noPhotosMessage.classList.add('mt-4');
-                photoContainer.appendChild(noPhotosMessage);
-
                 Toastify({
                     text: 'No photos found',
                     duration: 1500,
@@ -39,15 +41,47 @@
 
         searchInput.addEventListener('input', function () {
             var searchValue = searchInput.value.trim().toLowerCase();
+            currentPage = 1;
 
-            var filteredPhotos = photos.filter(function (photo) {
-                return photo.title.toLowerCase().includes(searchValue);
-            });
-
-            displayPhotos(filteredPhotos);
+            axios.get(`/api/PhotosApi/GetPhotos?search=${searchValue}&page=${currentPage}&pageSize=${pageSize}`)
+                .then(function (response) {
+                    var data = response.data;
+                    var pagePhotos = data.photos;
+                    totalPages = data.totalPages;
+                    displayPhotos(pagePhotos);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         });
 
         displayPhotos(photos);
+
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) {
+                return;
+            }
+
+            currentPage = page;
+
+            axios.get(`/api/PhotosApi/GetPhotos?search=&page=${currentPage}&pageSize=${pageSize}`)
+                .then(function (response) {
+                    var data = response.data;
+                    var pagePhotos = data.photos;
+                    displayPhotos(pagePhotos);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        previousButton.addEventListener('click', function () {
+            goToPage(currentPage - 1);
+        });
+
+        nextButton.addEventListener('click', function () {
+            goToPage(currentPage + 1);
+        });
     })
     .catch(function (error) {
         console.log(error);

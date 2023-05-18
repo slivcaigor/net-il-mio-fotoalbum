@@ -10,7 +10,7 @@ namespace net_il_mio_fotoalbum.Controllers
     {
 
         [HttpGet]
-        public IActionResult GetPhotos(string? search)
+        public IActionResult GetPhotos(string? search, int page = 1, int pageSize = 6)
         {
             using (var context = new PhotoContext())
             {
@@ -21,10 +21,23 @@ namespace net_il_mio_fotoalbum.Controllers
                     photos = photos.Where(p => p.Title.ToLower().Contains(search.ToLower()));
                 }
 
-                return Ok(photos.ToList());
+                int totalCount = photos.Count();
+                int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                photos = photos.Skip((page - 1) * pageSize).Take(pageSize);
+
+                var result = new
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    Photos = photos.ToList()
+                };
+
+                return Ok(result);
             }
         }
-
 
     }
 }
