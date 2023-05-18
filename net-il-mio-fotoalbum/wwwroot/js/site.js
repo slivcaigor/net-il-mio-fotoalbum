@@ -22,7 +22,6 @@ document.getElementById('contactForm').addEventListener('submit', function (even
     if (name.length > 100) {
         var myToast = Toastify({
             text: "Name can't be longer than 100 characters!",
-            background: "linear-gradient(to right, #ff5f6d, #ffc371)",
             className: "errorToast",
             duration: 5000
         })

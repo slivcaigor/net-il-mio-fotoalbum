@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using net_il_mio_fotoalbum.Models;
 using System.Diagnostics;
 
@@ -28,5 +29,10 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+
+
+
     }
 }

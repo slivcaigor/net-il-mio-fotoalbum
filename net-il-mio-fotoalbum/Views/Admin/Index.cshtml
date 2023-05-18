@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    @model List<Photo>
+
+}
+
+@if (ViewBag.Message != null)
+{
+    <h1 class="text-center">@ViewBag.Message</h1>
+}
+else
+{
+    <section class="my-12 max-w-screen-xl mx-auto px-6">
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">Image</th>
+                        <th class="px-4 py-2">Title</th>
+                        <th class="px-4 py-2">Description</th>
+                        <th class="px-4 py-2">Categories</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in Model)
+                    {
+                        <tr>
+                            <td class="border ">
+                                <img class="w-8/12 " src="@card.Image" alt="@card.Title" loading="lazy">
+                            </td>
+                            <td class="border px-4 py-2">@card.Title</td>
+                            <td class="border px-4 py-2">@card.Description</td>
+                            <td class="border px-4 py-2">
+                                @foreach (var category in card.Categories)
+                                {
+                                    <span class="inline-block my-1 bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-1">@category.Name</span>
+                                }
+                            </td>
+                            <td class="border px-4 py-2">
+                                <div class="flex gap-2">
+                                    <a href="@Url.Action("Update", "Photo", new { id = card.Id })" class="btn btn-primary bg-black text-sm">Modifica</a>
+                                    <form asp-controller="Admin" asp-action="Delete" asp-route-id="@card.Id" method="post" onsubmit="return confirmDelete()">
+                                        <button class="btn btn-primary bg-black text-sm" type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this photo?');
+    }
+
+    function showToast() {
+        Toastify({
+            text: 'Photo deleted successfully',
+            duration: 3000,
+            className: 'errorToast',
+            background: 'red'
+        }).showToast();
+    }
+</script>
+
+
