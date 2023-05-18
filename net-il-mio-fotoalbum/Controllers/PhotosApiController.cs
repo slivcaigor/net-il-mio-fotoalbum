@@ -14,7 +14,7 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             using (var context = new PhotoContext())
             {
-                IQueryable<Photo> photos = context.Photo;
+                IQueryable<Photo> photos = context.Photo.Where(p => p.Visible == true);
 
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -38,6 +38,7 @@ namespace net_il_mio_fotoalbum.Controllers
                 return Ok(result);
             }
         }
+
 
         [HttpGet("{id}")]
         public IActionResult GetPhoto(int id)

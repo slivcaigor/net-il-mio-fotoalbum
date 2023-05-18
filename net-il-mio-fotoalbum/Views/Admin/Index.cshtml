@@ -19,6 +19,7 @@ else
                         <th class="px-4 py-2">Title</th>
                         <th class="px-4 py-2">Description</th>
                         <th class="px-4 py-2">Categories</th>
+                        <th class="px-4 py-2">Visibility</th>
                         <th class="px-4 py-2">Actions</th>
                     </tr>
                 </thead>
@@ -26,8 +27,8 @@ else
                     @foreach (var card in Model)
                     {
                         <tr>
-                            <td class="border ">
-                                <img class="w-8/12 " src="@card.Image" alt="@card.Title" loading="lazy">
+                            <td class="border">
+                                <img class="w-8/12" src="@card.Image" alt="@card.Title" loading="lazy">
                             </td>
                             <td class="border px-4 py-2">@card.Title</td>
                             <td class="border px-4 py-2">@card.Description</td>
@@ -37,6 +38,7 @@ else
                                     <span class="inline-block my-1 bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-1">@category.Name</span>
                                 }
                             </td>
+                            <td class="border px-4 py-2">@((card.Visible) ? "Visible" : "Not Visible")</td>
                             <td class="border px-4 py-2">
                                 <div class="flex gap-2">
                                     <a href="@Url.Action("Update", "Photo", new { id = card.Id })" class="btn btn-primary bg-black text-sm">Modifica</a>
@@ -49,6 +51,7 @@ else
                     }
                 </tbody>
             </table>
+
         </div>
     </section>
 }

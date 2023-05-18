@@ -6,7 +6,7 @@
         var photoContainer = document.getElementById('photo-container');
         var currentPage = data.page;
         var totalPages = data.totalPages;
-        var pageSize = data.pageSize; // Add this line
+        var pageSize = data.pageSize; 
         var previousButton = document.getElementById('previous-button');
         var nextButton = document.getElementById('next-button');
 
