@@ -43,7 +43,31 @@ namespace net_il_mio_fotoalbum.Controllers
 
             return $"https://{bucketName}.s3.amazonaws.com/{filePath}";
         }
-   
+
+        [HttpGet]
+        public IActionResult Index(int pageNumber = 1, int pageSize = 6)
+        {
+            using PhotoContext db = new();
+            List<Photo> photos = db.Photo
+                .Where(photo => photo.Visible == true)
+                .OrderBy(photo => photo.Id)
+                .Include(photo => photo.Categories)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            if (photos.Count == 0)
+            {
+                ViewBag.Message = "No photos available at the moment!";
+            }
+
+            int totalPhotos = db.Photo.Count();
+            ViewData["TotalPhotos"] = totalPhotos;
+            ViewBag.PageSize = pageSize;
+            ViewBag.CurrentPage = pageNumber;
+
+            return View("Index", photos);
+        }
 
         [HttpGet]
         public IActionResult Details(int id)

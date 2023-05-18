@@ -86,6 +86,51 @@ namespace net_il_mio_fotoalbum.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Categories()
+        {
+            using (var db = new PhotoContext())
+            {
+                List<Category> categories = db.Categories.ToList();
+                return View(categories);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var db = new PhotoContext())
+                {
+                    db.Categories.Add(category);
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("Categories");
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteCategory(int id)
+        {
+            using (var db = new PhotoContext())
+            {
+                var category = db.Categories.FirstOrDefault(c => c.Id == id);
+                if (category != null)
+                {
+                    db.Categories.Remove(category);
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Categories");
+        }
 
     }
 }
