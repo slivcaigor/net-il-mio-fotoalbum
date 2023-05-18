@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "";
+    @model Photo
+
+}
+
+<div class="min-w-screen min-h-screen bg-yellow-300 flex items-center p-5 lg:p-10 overflow-hidden relative">
+    <div class="w-full max-w-6xl rounded bg-white shadow-xl p-10 lg:p-20 mx-auto text-gray-800 relative md:text-left">
+        <div class="md:flex items-center -mx-10">
+            <div class="w-full md:w-1/2 px-10 mb-10 md:mb-0">
+                <div class="relative">
+                    <img src="@Model.Image" class="w-full relative z-10" alt="@Model.Title">
+                    <div class="border-4 border-yellow-200 absolute top-10 bottom-10 left-10 right-10 z-0"></div>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 px-10">
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="flex gap-2 mb-12">
+                        <a href="@Url.Action("Update", "Photo", new { id = Model.Id })" class="btn btn-primary bg-black">Modifica</a>
+                        <form asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                            <button class="btn btn-primary bg-black" type="submit">Elimina</button>
+                        </form>
+                    </div>
+                }
+                <div class="mb-10">
+
+                    @if (Model.Categories != null && Model.Categories.Any())
+                    {
+                        <p class="mb-2">
+                            <strong>Categories:</strong>
+                            <ul>
+                                @foreach (var ingredient in Model.Categories)
+                                {
+                                    <li>@ingredient.Name</li>
+                                }
+                            </ul>
+                        </p>
+                    }
+                    <h1 class="font-bold uppercase text-2xl mt-5 mb-5">@Model.Title</h1>
+                    <p class="text-sm">@Model.Description</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="text-2xl leading-none align-baseline">$</span>
+                        <button class="bg-yellow-300 opacity-75 hover:opacity-100 text-yellow-900 hover:text-gray-900 rounded-full px-10 py-2 font-semibold ml-2"><i class="mdi mdi-cart -ml-2 mr-2"></i> Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

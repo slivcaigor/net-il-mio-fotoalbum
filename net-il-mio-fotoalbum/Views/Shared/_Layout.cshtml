@@ -1,47 +1,62 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html data-theme="lofi" lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - net_il_mio_fotoalbum</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/net_il_mio_fotoalbum.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Photo Album</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon.ico">
 </head>
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">net_il_mio_fotoalbum</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <partial name="_LoginPartial" />
-                    </ul>
+    <header class="bg-white top-0 left-0 w-full shadow-sm">
+        <nav class="flex items-center max-w-screen-xl mx-auto px-6 py-3">
+            <div class="flex items-center justify-start space-x-6">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <img class="w-44 md:w-48 cursor-pointer" src="/img/" alt="Logo">
+                </a>
+            </div>
+            <div class="flex flex-grow items-center justify-end space-x-6">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="@Url.Action("Create", "Photo")" class="btn rounded btn-primary py-1 px-2 mt-2 text-sm md:text-base mb-3">Add New Photo</a>
+                }
+                <div class="dropdown dropdown-end">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-12 h-12 md:w-12 md:h-12 rounded-full">
+                                <img class="mask mask-hexagon-2" src="/img/avatar.png" />
+                            </div>
+                        </label>
+                    }
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - net_il_mio_fotoalbum - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+
+    <footer class="footer footer-center p-4 text-base-content">
+        <div>
+            <p>Copyright © 2023 - All right reserved by Igor Slivca LLC</p>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

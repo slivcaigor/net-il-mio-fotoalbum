@@ -63,5 +63,22 @@ namespace net_il_mio_fotoalbum.Controllers
             return View("Index", photos);
         }
 
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            using PhotoContext db = new();
+            Photo? photo = db.Photo
+                .Where(photo => photo.Id == id)
+                .Include(photo => photo.Categories)
+               .FirstOrDefault();
+
+            if (photo != null)
+            {
+                return View("Details", photo);
+            }
+            return RedirectToAction("Error404");
+        }
+
     }
 }
