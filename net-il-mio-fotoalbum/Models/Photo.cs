@@ -20,6 +20,9 @@ namespace net_il_mio_fotoalbum.Models
         [MaxLength(500)]
         public string? Description { get; set; }
 
+        [Column("visibility")]
+        public bool Visible { get; set; }
+
         [Column("image")]
         public string? Image { get; set; }
 

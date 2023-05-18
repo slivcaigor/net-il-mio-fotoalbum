@@ -21,8 +21,13 @@
                     <label class="block">Immagine:</label>
                     <input asp-for="ImageFile" type="file" class="w-full py-2 px-2" />
                 </div>
-
-
+                <div class="mb-4">
+                    <label class="block">Visibility:</label>
+                    <select asp-for="Visibility" class="w-full py-2 px-2">
+                        <option value="true">Visible</option>
+                        <option value="false">Not Visible</option>
+                    </select>
+                </div>
                 <div class="mb-4">
                     <label class="block pb-2">Categories:</label>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">

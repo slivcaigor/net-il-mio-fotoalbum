@@ -6,6 +6,7 @@ using net_il_mio_fotoalbum.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
+using Amazon;
 
 namespace net_il_mio_fotoalbum.Controllers
 {
@@ -47,6 +48,7 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             using PhotoContext db = new();
             List<Photo> photos = db.Photo
+                .Where(photo => photo.Visible == true)
                 .OrderBy(photo => photo.Id)
                 .Include(photo => photo.Categories)
                 .Skip((pageNumber - 1) * pageSize)
@@ -100,7 +102,6 @@ namespace net_il_mio_fotoalbum.Controllers
                 { Text = category.Name, Value = category.Id.ToString() });
             }
 
-
             model.Photo = new Photo();
             model.Category = listCategories;
 
@@ -132,17 +133,18 @@ namespace net_il_mio_fotoalbum.Controllers
             }
 
             using PhotoContext db = new();
-            Photo pizza = new Photo
+            Photo photo = new Photo
             {
                 Title = data.Photo.Title,
                 Description = data.Photo.Description,
-                Categories = new List<Category>()
+                Categories = new List<Category>(),
+                Visible = data.Visibility,
             };
 
             if (data.ImageFile != null && data.ImageFile.Length > 0)
             {
                 string imageUrl = UploadToS3(data.ImageFile);
-                pizza.Image = imageUrl;
+                photo.Image = imageUrl;
             }
             else
             {
@@ -159,13 +161,13 @@ namespace net_il_mio_fotoalbum.Controllers
                         Category category = db.Categories.FirstOrDefault(ing => ing.Id == categoryId);
                         if (category != null)
                         {
-                            pizza.Categories.Add(category);
+                            photo.Categories.Add(category);
                         }
                     }
                 }
             }
 
-            db.Photo.Add(pizza);
+            db.Photo.Add(photo);
             db.SaveChanges();
 
             return RedirectToAction("Index");
@@ -196,6 +198,8 @@ namespace net_il_mio_fotoalbum.Controllers
             model.Photo = photo;
             model.Category = listCategories;
             model.SelectedCategories = photo.Categories.Select(c => c.Id.ToString()).ToList();
+            model.Visibility = photo.Visible;
+
 
             return View("Update", model);
         }
@@ -234,6 +238,7 @@ namespace net_il_mio_fotoalbum.Controllers
 
             photo.Title = data.Photo.Title;
             photo.Description = data.Photo.Description;
+            photo.Visible = data.Visibility;
             photo.Categories.Clear();
 
             if (data.ImageFile != null && data.ImageFile.Length > 0)
