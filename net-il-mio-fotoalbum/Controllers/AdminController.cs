@@ -39,6 +39,46 @@ namespace net_il_mio_fotoalbum.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult SearchPhotos(string searchTitle, int pageNumber = 1, int pageSize = 6)
+        {
+            using (var db = new PhotoContext())
+            {
+                List<Photo> photos;
+
+                if (string.IsNullOrEmpty(searchTitle))
+                {
+                    photos = db.Photo
+                        .OrderBy(photo => photo.Id)
+                        .Include(photo => photo.Categories)
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                }
+                else
+                {
+                    photos = db.Photo
+                        .Where(photo => photo.Title.Contains(searchTitle))
+                        .OrderBy(photo => photo.Id)
+                        .Include(photo => photo.Categories)
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                }
+
+                if (photos.Count == 0)
+                {
+                    ViewBag.Message = "No photos found!";
+                }
+
+                int totalPhotos = db.Photo.Count();
+                ViewData["TotalPhotos"] = totalPhotos;
+                ViewBag.PageSize = pageSize;
+                ViewBag.CurrentPage = pageNumber;
+
+                return View("Index", photos);
+            }
+        }
 
 
         [Authorize(Roles = "Admin")]

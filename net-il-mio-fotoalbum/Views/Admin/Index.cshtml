@@ -6,11 +6,23 @@
 
 @if (ViewBag.Message != null)
 {
-    <h1 class="text-center">@ViewBag.Message</h1>
+    <h1 class="text-center mt-5">@ViewBag.Message</h1>
+    <div class="flex justify-center mt-4">
+        <a href="@Url.Action("Index", "Admin")" class="px-4 py-2 bg-gray-200 text-gray-700 rounded">Go Back</a>
+    </div>
 }
 else
 {
     <section class="my-12 max-w-screen-xl mx-auto px-6">
+        <div class="mb-3 flex justify-center">
+            <form method="post" action="@Url.Action("SearchPhotos", "Admin")">
+                <input type="search"
+                       name="searchTitle"
+                       class="w-2/3 px-3 py-2 text-base leading-6 text-neutral-700 border border-neutral-300 rounded outline-none focus:ring-primary focus:border-primary"
+                       placeholder="Search by title" />
+                <button type="submit" class="px-4 py-2 ml-2 bg-gray-200 text-gray-700 rounded">Search</button>
+            </form>
+        </div>
         <div class="overflow-x-auto">
             <table class="table-auto w-full">
                 <thead>
